@@ -25,5 +25,5 @@ Get-AllMarketsHistory -bearerToken $token -path ".\all_markets_history.csv" -tic
 ~~~
 Retrieve all trades for a market ticker given an array of tickers (no token necessary), and write out to a CSV file
 ~~~
-$trades = Get-AllTrades -path ".\kalshi_all_trades.csv" -TickersData $tickers
+$trades = Get-AllTrades -path ".\kalshi_all_trades.csv" -tickers $tickers
 ~~~
