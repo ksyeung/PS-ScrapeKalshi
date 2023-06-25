@@ -102,7 +102,7 @@ function Get-AllMarkets {
 function Get-AllTrades {
     param (
         [Parameter(Mandatory=$true)]
-        [array] $TickersData,
+        [array] $tickers,
 
         [Parameter(Mandatory=$true)]
         [string] $path
@@ -112,7 +112,7 @@ function Get-AllTrades {
     }
     $tradesData = @()
 
-    foreach ($ticker in $TickersData) {
+    foreach ($ticker in $tickers) {
         $URL = "$global:endpoint/markets/trades?limit=1000&ticker=$ticker"
         $tradesData += Get-AllData -category "trades" -URL $URL -Headers $headers
         $tradesData | Export-Csv -Path $path -Append -NoTypeInformation -Force
