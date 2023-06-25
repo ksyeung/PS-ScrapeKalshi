@@ -11,7 +11,6 @@ function Get-BearerToken {
         [Parameter(Mandatory=$true)]
         [string] $password
     )
-
     $URL = "$($global:endpoint)/login"
     $headers = @{
     "accept" = "application/json"
@@ -49,7 +48,6 @@ function Get-AllData {
         [Parameter(Mandatory=$false)]
         [int] $sleepTimeInMilliseconds = 105
     )
-
     $cursor = $null
     $data = @()
 
@@ -78,7 +76,6 @@ function Get-AllData {
             $data += $response.events
             }
         }
-
         Start-Sleep -Milliseconds $sleepTimeInMilliseconds
     } while ($cursor -ne "" -and $cursor -ne $null)
     return $data
@@ -92,7 +89,6 @@ function Get-AllMarkets {
         [Parameter(Mandatory=$true)]
         [string] $path
     )
-
     $URL = "$global:endpoint/markets?limit=1000&status=settled"
     $headers = @{
         "accept" = "application/json"
@@ -111,19 +107,14 @@ function Get-AllTrades {
         [Parameter(Mandatory=$true)]
         [string] $path
     )
-
     $headers = @{
         "accept" = "application/json"
     }
-
-    $i=0
     $tradesData = @()
 
     foreach ($ticker in $TickersData) {
         $URL = "$global:endpoint/markets/trades?limit=1000&ticker=$ticker"
-        $tradesData += Get-AllData -category "trades" -URL $URL -Headers $headers 
-        Write-Host "$i of 24986"
-        $i+=1
+        $tradesData += Get-AllData -category "trades" -URL $URL -Headers $headers
         $tradesData | Export-Csv -Path $path -Append -NoTypeInformation -Force
     }
 }
@@ -139,16 +130,12 @@ function Get-AllMarketsHistory {
         [Parameter(Mandatory=$true)]
         [string] $path
     )
-
     $headers = @{
         "accept" = "application/json"
         "Authorization" = $bearerToken
     }
-    $i=0
 
     foreach ($ticker in $tickers) {
-        Write-Host "$i $ticker"
-        $i+=1
         $URL = "$global:endpoint/markets/$ticker/history?limit=1000"
         $data = Get-AllData -category "history" -URL $URL -Headers $headers
 
@@ -156,7 +143,6 @@ function Get-AllMarketsHistory {
         foreach ($row in $data) {
             $row | Add-Member -NotePropertyName "ticker" -NotePropertyValue $ticker
         }
-
         $data | Export-Csv -Path $path -Append -NoTypeInformation -Force
     }
 }
@@ -167,11 +153,10 @@ function Extract-TickersFromMarketsData {
         [Parameter(Mandatory=$true)]
         [array] $marketsData
         )
-
     $tickers = @()
+    
     foreach ($row in $marketsData) {
         $tickers += $row.ticker
     }
-
     return $tickers
 }
